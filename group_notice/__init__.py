@@ -11,6 +11,7 @@ from . import url
 
 def create_app():
     app = Flask(__name__)
-    app.register_blueprint(url.notice)
     return app
 
+def register_blueprint(app):
+    app.register_blueprint('notice', __name__, url_prefix='/notice')
