@@ -10,7 +10,7 @@ from mongoengine import *
 from flask import request, jsonify
 
 from group_notice.models import GroupNotcieOld, GroupNotcieNew, Notice
-from .url import notice
+from group_notice.url import notice
 
 
 @notice.route('/old', methods=('PUT'))
