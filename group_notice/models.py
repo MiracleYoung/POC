@@ -134,6 +134,7 @@ def gen_notice_old():
 
 def gen_notice_new():
     db['GroupNoticeNew'].drop()
+    db['Notice'].drop()
     db['mongoengine.counters'].remove({'_id': 'Notice._id'})
 
     notice = Notice(title='全站', author='Miracle', type=1,
@@ -152,51 +153,4 @@ def gen_notice_new():
 
 
 if __name__ == '__main__':
-    u1 = User(uname='a')
-    u1.save()
-    u2 = User(uname='b')
-    u2.save()
-    c1 = Class(user=[u1, ])
-    c1.save()
-    c2 = Class(user=[u1, u2])
-    c2.save()
-    # g1 = Group(cls=[c1, c2], gid=1)
-    # g1.save()
-
-    g2 = Group(cls=[c1, c2])
-    g2.save()
-
-    u1 = User(uname='a')
-    u2 = User(uname='b')
-    c1 = Class(user=[u1, ])
-    c2 = Class(user=[u1, u2])
-    g2 = Group(cls=[c1, c2])
-    g2.save()
-
-    lst50 = list(range(1, 51))
-    unrecieved = {}
-    hasrecieved = {}
-    for sid in range(1, 21):
-        unrecieved[str(sid)] = {}
-        hasrecieved[str(sid)] = {}
-        for gid in range(1, 51):
-            unrecieved[str(sid)][str(gid)] = {}
-            hasrecieved[str(sid)][str(gid)] = {}
-            for cid in range(1, 21):
-                unrecieved[str(sid)][str(gid)][str(cid)] = lst50
-                hasrecieved[str(sid)][str(gid)][str(cid)] = []
-                lst50 = list(map(lambda x: x + 50, lst50))
-
-    '''
-    unrecieved: [
-        '2': { # group_id
-            '3': [ # class_id
-                1, 2, 3, ... # uid
-            ]
-        }
-    ]
-    '''
-
-    gn = GroupNotcieOld(title='全站', author='Miracle', type=1, unrecieved=unrecieved, hasrecieved=hasrecieved,
-                        content='全站通知全站通知全站通知全站通知全站通知全站通知全站通知全站通知')
-    gn.save()
+    pass
