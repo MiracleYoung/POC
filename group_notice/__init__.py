@@ -5,13 +5,20 @@
 # @File    : __init__.py.py
 
 from flask import Flask
+from mongoengine import connect
 
-from . import url
+from group_notice.api import notice
 
 
 def create_app():
     app = Flask(__name__)
+    register_bp(app)
     return app
 
-def register_blueprint(app):
-    app.register_blueprint('notice', __name__, url_prefix='/notice')
+
+def register_bp(app):
+    app.register_blueprint(notice, url_prefix='/notice')
+
+
+def create_db():
+    connect(db='test', alias='test')

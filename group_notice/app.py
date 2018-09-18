@@ -4,9 +4,9 @@
 
 __author__ = 'MiracleYoung'
 
-from group_notice import create_app
-
-app = create_app()
+from group_notice import create_app, create_db
 
 if __name__ == '__main__':
+    app = create_app()
+    create_db()
     app.run(host='0.0.0.0', port=5000, debug=True)

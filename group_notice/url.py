@@ -4,6 +4,3 @@
 
 __author__ = 'MiracleYoung'
 
-from flask import Flask, Blueprint
-
-notice = Blueprint('notice', __name__, url_prefix='/notice')

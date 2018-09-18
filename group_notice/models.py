@@ -4,10 +4,14 @@
 # @Author  : MiracleYoung
 # @File    : models.py
 
-import random
+
 from datetime import datetime
 
 from mongoengine import *
+from pymongo import MongoClient
+
+_client = MongoClient(host='127.0.0.1', port=27017, maxPoolSize=100)
+db = _client['test']
 
 
 class User(DynamicEmbeddedDocument):
@@ -98,6 +102,55 @@ class GroupNotcieNew(Document):
     }
 
 
+def gen_notice_old():
+    '''
+    unrecieved: [
+        '2': { # group_id
+            '3': [ # class_id
+                1, 2, 3, ... # uid
+            ]
+        }
+    ]
+    '''
+    db['GroupNoticeOld'].drop()
+    db['mongoengine.counters'].remove({'_id': 'GroupNoticeOld._id'})
+    lst50 = list(range(1, 51))
+    unrecieved = {}
+    hasrecieved = {}
+    for sid in range(1, 21):
+        unrecieved[str(sid)] = {}
+        hasrecieved[str(sid)] = {}
+        for gid in range(1, 51):
+            unrecieved[str(sid)][str(gid)] = {}
+            hasrecieved[str(sid)][str(gid)] = {}
+            for cid in range(1, 21):
+                unrecieved[str(sid)][str(gid)][str(cid)] = lst50
+                hasrecieved[str(sid)][str(gid)][str(cid)] = []
+                lst50 = list(map(lambda x: x + 50, lst50))
+    gn = GroupNotcieOld(title='全站', author='Miracle', type=1, unrecieved=unrecieved, hasrecieved=hasrecieved,
+                        content='全站通知全站通知全站通知全站通知全站通知全站通知全站通知全站通知')
+    gn.save()
+
+
+def gen_notice_new():
+    db['GroupNoticeNew'].drop()
+    db['mongoengine.counters'].remove({'_id': 'Notice._id'})
+
+    notice = Notice(title='全站', author='Miracle', type=1,
+                    content='全站通知全站通知全站通知全站通知全站通知全站通知全站通知全站通知')
+    notice.save()
+    unrecieved = list(range(1, 51))
+    hasrecieved = []
+    for sid in range(1, 21):
+        for gid in range(1, 51):
+            for cid in range(1, 21):
+                db['GroupNoticeNew'].insert({
+                    'notice_id': 1, 'school_id': sid, 'group_id': gid, 'class_id': cid,
+                    'unrecieved': unrecieved, 'hasrecieved': hasrecieved,
+                })
+                unrecieved = list(map(lambda x: x + 50, unrecieved))
+
+
 if __name__ == '__main__':
     u1 = User(uname='a')
     u1.save()
@@ -123,13 +176,13 @@ if __name__ == '__main__':
     lst50 = list(range(1, 51))
     unrecieved = {}
     hasrecieved = {}
-    for sid in range(1, 20):
+    for sid in range(1, 21):
         unrecieved[str(sid)] = {}
         hasrecieved[str(sid)] = {}
-        for gid in range(1, 50):
+        for gid in range(1, 51):
             unrecieved[str(sid)][str(gid)] = {}
             hasrecieved[str(sid)][str(gid)] = {}
-            for cid in range(1, 20):
+            for cid in range(1, 21):
                 unrecieved[str(sid)][str(gid)][str(cid)] = lst50
                 hasrecieved[str(sid)][str(gid)][str(cid)] = []
                 lst50 = list(map(lambda x: x + 50, lst50))
