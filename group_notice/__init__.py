@@ -13,6 +13,7 @@ from group_notice.api import notice
 def create_app():
     app = Flask(__name__)
     register_bp(app)
+    create_db()
     return app
 
 
