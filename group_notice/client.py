@@ -10,6 +10,7 @@ from urllib3.util.retry import Retry
 from threading import Thread, Event, RLock
 import random
 import datetime
+import sys
 
 
 class Client(Thread):
@@ -22,7 +23,7 @@ class Client(Thread):
         self._pre_url = 'http://localhost:5000'
         self._noticeold_url = f'{self._pre_url}/notice/old'
         self._noticenew_url = f'{self._pre_url}/notice/new'
-        self._url = self._noticenew_url if self._is_new else self._noticeold_url
+        self._url = self._noticenew_url if self._is_new == 'True' else self._noticeold_url
         self._session = requests.Session()
         self._retry = Retry(connect=3, backoff_factor=10)
         self._adapter = HTTPAdapter(max_retries=self._retry)
@@ -41,7 +42,8 @@ class Client(Thread):
 
 
 if __name__ == '__main__':
-    clients = [Client(10, True) for _ in range(200)]
+    is_new = sys.argv[1]
+    clients = [Client(10, is_new) for _ in range(200)]
     st = datetime.datetime.now()
     for c in clients:
         c.start()
