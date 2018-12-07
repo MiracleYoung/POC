@@ -7,8 +7,8 @@
 
 from datetime import datetime
 
-from mongoengine import *
 from pymongo import MongoClient
+from mongoengine import *
 
 _client = MongoClient(host='127.0.0.1', port=27017, maxPoolSize=100)
 db = _client['test']
@@ -102,7 +102,7 @@ class GroupNotcieNew(Document):
     }
 
 
-def gen_notice_old():
+def gen_notice_old(db):
     '''
     unrecieved: [
         '2': { # group_id
@@ -113,7 +113,7 @@ def gen_notice_old():
     ]
     '''
     db['GroupNoticeOld'].drop()
-    db['mongoengine.counters'].remove({'_id': 'GroupNoticeOld._id'})
+    db['mongoengine.counters'].delete_many({'_id': 'GroupNoticeOld._id'})
     lst50 = list(range(1, 51))
     unrecieved = {}
     hasrecieved = {}
@@ -127,25 +127,30 @@ def gen_notice_old():
                 unrecieved[str(sid)][str(gid)][str(cid)] = lst50
                 hasrecieved[str(sid)][str(gid)][str(cid)] = []
                 lst50 = list(map(lambda x: x + 50, lst50))
-    gn = GroupNotcieOld(title='全站', author='Miracle', type=1, unrecieved=unrecieved, hasrecieved=hasrecieved,
-                        content='全站通知全站通知全站通知全站通知全站通知全站通知全站通知全站通知')
-    gn.save()
+
+    db['GroupNoticeOld'].insert_one({
+        "_id": 1, 'title': '全站', 'author': 'Miracle', 'type': 1,
+        'content': '全站通知全站通知全站通知全站通知全站通知全站通知全站通知全站通知',
+        'unrecieved': unrecieved, 'hasrecieved': hasrecieved,
+    })
 
 
-def gen_notice_new():
+def gen_notice_new(db):
     db['GroupNoticeNew'].drop()
     db['Notice'].drop()
-    db['mongoengine.counters'].remove({'_id': 'Notice._id'})
+    db['mongoengine.counters'].delete_many({'_id': 'Notice._id'})
 
-    notice = Notice(title='全站', author='Miracle', type=1,
-                    content='全站通知全站通知全站通知全站通知全站通知全站通知全站通知全站通知')
-    notice.save()
+    db['Notice'].insert_one({
+        "_id": 1, "title": '全站', "author": 'Miracle', "type": 1,
+        "content": '全站通知全站通知全站通知全站通知全站通知全站通知全站通知全站通知'
+    })
+
     unrecieved = list(range(1, 51))
     hasrecieved = []
     for sid in range(1, 21):
         for gid in range(1, 51):
             for cid in range(1, 21):
-                db['GroupNoticeNew'].insert({
+                db['GroupNoticeNew'].insert_one({
                     'notice_id': 1, 'school_id': sid, 'group_id': gid, 'class_id': cid,
                     'unrecieved': unrecieved, 'hasrecieved': hasrecieved,
                 })
@@ -153,4 +158,5 @@ def gen_notice_new():
 
 
 if __name__ == '__main__':
-    pass
+    gen_notice_old(db)
+    gen_notice_new(db)
