@@ -5,13 +5,12 @@
 __author__ = 'Miracle'
 
 import time
-import random
 
 import pymongo
 from faker import Faker
 
-from fake_data.edu.students import EduProvider
-from fake_data.edu.priority import get_priority
+from MongoDB.fake_data import EduProvider
+from MongoDB.fake_data import get_priority
 
 conn = pymongo.MongoClient('mongodb://tapdata-server:27019')
 db = conn['edu']

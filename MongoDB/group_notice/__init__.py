@@ -7,7 +7,7 @@
 from flask import Flask
 from mongoengine import connect
 
-from group_notice.api import notice
+from MongoDB.group_notice import notice
 
 
 def create_app():

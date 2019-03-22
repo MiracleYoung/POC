@@ -9,7 +9,7 @@ import random
 from mongoengine import *
 from flask import request, jsonify, Blueprint
 
-from group_notice.models import GroupNotcieOld, GroupNotcieNew, Notice, db
+from MongoDB.group_notice.models import GroupNotcieOld, db
 
 notice = Blueprint('notice', __name__, url_prefix='/notice')
 

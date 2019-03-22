@@ -4,7 +4,7 @@
 
 __author__ = 'MiracleYoung'
 
-from group_notice import create_app
+from MongoDB.group_notice import create_app
 
 if __name__ == '__main__':
     app = create_app()
