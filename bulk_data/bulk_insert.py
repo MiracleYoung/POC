@@ -4,13 +4,16 @@
 
 __author__ = 'MiracleYoung'
 
-import datetime
-from decimal import Decimal
+import datetime, sys
 
 import pymongo
 
-MONGO_HOST = '192.168.56.3'
-MONGO_PORT = 27017
+
+
+MONGO_HOST = sys.argv[1]
+MONGO_PORT = int(sys.argv[2])
+COUNT = int(sys.argv[3])
+
 
 client = pymongo.MongoClient(host=MONGO_HOST, port=MONGO_PORT, maxPoolSize=100)
 db = client['mydb']
@@ -27,12 +30,19 @@ data = {
 
 }
 
+data1 = {
+    'job': 'Water quality scientist', 'company': 'GB51UBHB8644630682056 GB51UBHB8644630682056', 'ssn': '709-11-3334',
+    'residence': 'GB51UBHB8644630682056\nGB51UBHB8644630682056, GB51UBHB8644630682056 GB51UBHB8644630682056',
+}
+
 
 def bulk_insert(count):
     for i in range(1, count + 1):
-        data.update({'_id': i, 'role_id': i})
-        db['user'].insert(data)
+        # data.update({'_id': i, 'role_id': i})
+        # db['user'].insert(data)
+        data1.update({'_id': i})
+        db['role'].insert(data1)
 
 
 if __name__ == '__main__':
-    bulk_insert(100)
+    bulk_insert(COUNT)
