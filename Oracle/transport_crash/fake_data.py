@@ -21,10 +21,10 @@ fake = faker.Faker()
 G_OBJECTID = 200000000
 
 
-def random_Crash_Details_Table():
+def random_CRASH_DETAILS_TABLE():
     '''
-    随机往Crash_Details_Table表里写数据
-    D => Crash_Details_Table
+    随机往CRASH_DETAILS_TABLE表里写数据
+    D => CRASH_DETAILS_TABLE
     :param cur:
     :return:
     '''
@@ -58,10 +58,10 @@ def random_Crash_Details_Table():
     )
 
 
-def random_Crashes_in_DC():
+def random_CRASHES_IN_DC():
     '''
-    随机往Crash_Details_Table表里写数据
-    C => Crashes_in_DC
+    随机往CRASH_DETAILS_TABLE表里写数据
+    C => CRASHES_IN_DC
     :param cur:
     :return:
     '''
@@ -136,20 +136,20 @@ if __name__ == '__main__':
     with cx_Oracle.connect(username, pwd, uri) as conn:
         with conn.cursor() as cur:
 
-            cur.execute('delete from "ARTHUR"."Crash_Details_Table" where OBJECTID >= 200000000')
-            cur.execute('delete from "ARTHUR"."Crashes_in_DC" where OBJECTID >= 200000000')
+            cur.execute('delete from "ARTHUR"."CRASH_DETAILS_TABLE" where OBJECTID >= 200000000')
+            cur.execute('delete from "ARTHUR"."CRASHES_IN_DC" where OBJECTID >= 200000000')
 
             while True:
                 G_OBJECTID += 1
 
-                d_data = random_Crash_Details_Table()
+                d_data = random_CRASH_DETAILS_TABLE()
                 d_values = [':' + k for k, v in d_data.items()]
-                d_sql = 'insert into ARTHUR."Crash_Details_Table" values(%s)' % (','.join(d_values))
+                d_sql = 'insert into ARTHUR."CRASH_DETAILS_TABLE" values(%s)' % (','.join(d_values))
                 cur.execute(d_sql, dict(d_data))
 
-                c_data = random_Crashes_in_DC()
+                c_data = random_CRASHES_IN_DC()
                 c_values = [':' + k for k, v in c_data.items()]
-                c_sql = 'insert into ARTHUR."Crashes_in_DC" values(%s)' % (','.join(c_values))
+                c_sql = 'insert into ARTHUR."CRASHES_IN_DC" values(%s)' % (','.join(c_values))
                 cur.execute(c_sql, dict(c_data))
 
                 conn.commit()
